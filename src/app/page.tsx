@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetch("/api/advocates").then((response) => {
@@ -16,10 +17,10 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (e) => {
-    const searchTerm = e.target.value;
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value;
 
-    document.getElementById("search-term").innerHTML = searchTerm;
+    setSearchTerm(searchTerm);
 
     const filteredAdvocates = advocates.filter((advocate) => {
       const lowerSearchTerm = searchTerm.toLowerCase();
@@ -55,9 +56,13 @@ export default function Home() {
       <div>
         <p>Search</p>
         <p>
-          Searching for: <span id="search-term"></span>
+          Searching for: <span id="search-term">{searchTerm}</span>
         </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
+        <input
+          style={{ border: "1px solid black" }}
+          onChange={onChange}
+          value={searchTerm}
+        />
         <button onClick={onClick}>Reset Search</button>
       </div>
       <br />

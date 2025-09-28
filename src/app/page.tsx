@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Advocate } from "@/types/advocates";
 import { Typography, Button, Input, Table, Spin } from "antd";
+import { NumericFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
+
+import { Advocate } from "@/types/advocates";
 import AppLayout from "@/components/app-layout";
 
 const advocateColumns = [
@@ -49,6 +52,17 @@ const advocateColumns = [
     key: "phoneNumber",
     title: "Phone Number",
     dataIndex: "phoneNumber",
+    render: (phoneNumber: string) => {
+      return (
+        <PatternFormat
+          format="+1 (###) ###-####"
+          value={phoneNumber}
+          displayType="text"
+          allowEmptyFormatting
+          mask="_"
+        />
+      );
+    },
   },
 ];
 

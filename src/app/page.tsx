@@ -1,7 +1,7 @@
 "use client";
 
-import { Advocate } from "@/types/advocates";
 import { useEffect, useState } from "react";
+import { Advocate } from "@/types/advocates";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -46,7 +46,7 @@ export default function Home() {
 
       return (
         advocate.firstName.toLowerCase().includes(lowerSearchTerm) ||
-        advocate.lastName.includes(lowerSearchTerm) ||
+        advocate.lastName.toLowerCase().includes(lowerSearchTerm) ||
         advocate.city.toLowerCase().includes(lowerSearchTerm) ||
         advocate.degree.toLowerCase().includes(lowerSearchTerm) ||
         advocate.specialties.some((specialty) =>

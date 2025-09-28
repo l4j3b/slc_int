@@ -10,6 +10,9 @@ export async function GET() {
     // TODO:Log the error to Sentry etc.
     console.error("Error fetching advocates:", error);
 
-    return Response.json({}, { status: 500 });
+    return Response.json(
+      { error: "Failed to fetch advocates." },
+      { status: 500 },
+    );
   }
 }

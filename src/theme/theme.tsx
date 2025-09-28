@@ -13,7 +13,7 @@ const theme: ThemeConfig = {
     Layout: {
       headerBg: colors.secondary,
       headerHeight: 64,
-      headerPadding: 18,
+      headerPadding: 24,
     },
   },
 };

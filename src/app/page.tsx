@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Typography, Button, Input, Table, Spin } from "antd";
+import { Typography, Button, Input, Table, Spin, Affix } from "antd";
 import { NumericFormat } from "react-number-format";
 import { PatternFormat } from "react-number-format";
 
@@ -71,7 +71,7 @@ export default function Home() {
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAdvocates = async () => {
@@ -146,10 +146,18 @@ export default function Home() {
       </div>
 
       <div>
-        {isLoading && <Spin />}
+        {isLoading && (
+          <div className="flex justify-center items-center min-h-64">
+            <Spin />
+          </div>
+        )}
 
         {!isLoading && error && (
-          <Typography.Title level={5}>{error}</Typography.Title>
+          <div className="flex justify-center items-center min-h-64">
+            <Typography.Title level={5} className="text-red-500">
+              {error}
+            </Typography.Title>
+          </div>
         )}
 
         {!isLoading && !error && (

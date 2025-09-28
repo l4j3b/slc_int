@@ -2,8 +2,55 @@
 
 import { useEffect, useState } from "react";
 import { Advocate } from "@/types/advocates";
-import { Typography, Button } from "antd";
+import { Typography, Button, Input, Table, Spin } from "antd";
 import AppLayout from "@/components/app-layout";
+
+const advocateColumns = [
+  {
+    key: "firstName",
+    title: "First Name",
+    dataIndex: "firstName",
+  },
+  {
+    key: "lastName",
+    title: "Last Name",
+    dataIndex: "lastName",
+  },
+  {
+    key: "city",
+    title: "City",
+    dataIndex: "city",
+  },
+  {
+    key: "degree",
+    title: "Degree",
+    dataIndex: "degree",
+  },
+  {
+    key: "specialties",
+    title: "Specialties",
+    dataIndex: "specialties",
+    render: (specialties: string[]) => {
+      return (
+        <ul>
+          {specialties.map((specialty) => (
+            <li key={specialty}>{specialty}</li>
+          ))}
+        </ul>
+      );
+    },
+  },
+  {
+    key: "yearsOfExperience",
+    title: "Years of Experience",
+    dataIndex: "yearsOfExperience",
+  },
+  {
+    key: "phoneNumber",
+    title: "Phone Number",
+    dataIndex: "phoneNumber",
+  },
+];
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -71,63 +118,34 @@ export default function Home() {
 
   return (
     <AppLayout>
-      <Typography.Title level={1}>Solace Advocates</Typography.Title>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term">{searchTerm}</span>
-        </p>
-        <input
-          style={{ border: "1px solid black" }}
+      <Typography.Title level={2}>Advocates</Typography.Title>
+
+      <div className="flex gap-2 mb-4">
+        <Input
           onChange={onChange}
           value={searchTerm}
+          placeholder="Search for an advocate"
         />
         <Button onClick={resetSearch} variant="link" color="primary">
           Reset Search
         </Button>
       </div>
-      <br />
-      <br />
 
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && error && <p>{error}</p>}
+      <div>
+        {isLoading && <Spin />}
 
-      {!isLoading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>City</th>
-              <th>Degree</th>
-              <th>Specialties</th>
-              <th>Years of Experience</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAdvocates.map((advocate) => {
-              return (
-                <tr key={advocate.id}>
-                  <td>{advocate.firstName}</td>
-                  <td>{advocate.lastName}</td>
-                  <td>{advocate.city}</td>
-                  <td>{advocate.degree}</td>
-                  <td>
-                    {advocate.specialties.map((specialty) => (
-                      <div key={specialty}>{specialty}</div>
-                    ))}
-                  </td>
-                  <td>{advocate.yearsOfExperience}</td>
-                  <td>{advocate.phoneNumber}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
+        {!isLoading && error && (
+          <Typography.Title level={5}>{error}</Typography.Title>
+        )}
+
+        {!isLoading && !error && (
+          <Table
+            rowKey="id"
+            dataSource={filteredAdvocates}
+            columns={advocateColumns}
+          />
+        )}
+      </div>
     </AppLayout>
   );
 }

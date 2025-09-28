@@ -1,14 +1,77 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Typography, Button, Input, Table, Spin, Affix } from "antd";
+import { NumericFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
+
 import { Advocate } from "@/types/advocates";
+import AppLayout from "@/components/app-layout";
+
+const advocateColumns = [
+  {
+    key: "firstName",
+    title: "First Name",
+    dataIndex: "firstName",
+  },
+  {
+    key: "lastName",
+    title: "Last Name",
+    dataIndex: "lastName",
+  },
+  {
+    key: "city",
+    title: "City",
+    dataIndex: "city",
+  },
+  {
+    key: "degree",
+    title: "Degree",
+    dataIndex: "degree",
+  },
+  {
+    key: "specialties",
+    title: "Specialties",
+    dataIndex: "specialties",
+    render: (specialties: string[]) => {
+      return (
+        <ul className="list-disc list-inside">
+          {specialties.map((specialty) => (
+            <li key={specialty}>{specialty}</li>
+          ))}
+        </ul>
+      );
+    },
+  },
+  {
+    key: "yearsOfExperience",
+    title: "Years of Experience",
+    dataIndex: "yearsOfExperience",
+  },
+  {
+    key: "phoneNumber",
+    title: "Phone Number",
+    dataIndex: "phoneNumber",
+    render: (phoneNumber: string) => {
+      return (
+        <PatternFormat
+          format="+1 (###) ###-####"
+          value={phoneNumber}
+          displayType="text"
+          allowEmptyFormatting
+          mask="_"
+        />
+      );
+    },
+  },
+];
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAdvocates = async () => {
@@ -68,62 +131,43 @@ export default function Home() {
   };
 
   return (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <br />
-      <br />
-      <div>
-        <p>Search</p>
-        <p>
-          Searching for: <span id="search-term">{searchTerm}</span>
-        </p>
-        <input
-          style={{ border: "1px solid black" }}
+    <AppLayout>
+      <Typography.Title level={2}>Advocates</Typography.Title>
+
+      <div className="flex gap-2 mb-4">
+        <Input
           onChange={onChange}
           value={searchTerm}
+          placeholder="Search for an advocate"
         />
-        <button onClick={resetSearch}>Reset Search</button>
+        <Button onClick={resetSearch} variant="link" color="primary">
+          Reset Search
+        </Button>
       </div>
-      <br />
-      <br />
 
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && error && <p>{error}</p>}
+      <div>
+        {isLoading && (
+          <div className="flex justify-center items-center min-h-64">
+            <Spin />
+          </div>
+        )}
 
-      {!isLoading && !error && (
-        <table>
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>City</th>
-              <th>Degree</th>
-              <th>Specialties</th>
-              <th>Years of Experience</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAdvocates.map((advocate) => {
-              return (
-                <tr key={advocate.id}>
-                  <td>{advocate.firstName}</td>
-                  <td>{advocate.lastName}</td>
-                  <td>{advocate.city}</td>
-                  <td>{advocate.degree}</td>
-                  <td>
-                    {advocate.specialties.map((specialty) => (
-                      <div key={specialty}>{specialty}</div>
-                    ))}
-                  </td>
-                  <td>{advocate.yearsOfExperience}</td>
-                  <td>{advocate.phoneNumber}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      )}
-    </main>
+        {!isLoading && error && (
+          <div className="flex justify-center items-center min-h-64">
+            <Typography.Title level={5} className="text-red-500">
+              {error}
+            </Typography.Title>
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          <Table
+            rowKey="id"
+            dataSource={filteredAdvocates}
+            columns={advocateColumns}
+          />
+        )}
+      </div>
+    </AppLayout>
   );
 }

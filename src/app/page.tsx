@@ -22,13 +22,20 @@ export default function Home() {
     document.getElementById("search-term").innerHTML = searchTerm;
 
     const filteredAdvocates = advocates.filter((advocate) => {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+
       return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.firstName.toLowerCase().includes(lowerSearchTerm) ||
+        advocate.lastName.includes(lowerSearchTerm) ||
+        advocate.city.toLowerCase().includes(lowerSearchTerm) ||
+        advocate.degree.toLowerCase().includes(lowerSearchTerm) ||
+        advocate.specialties.some((specialty) =>
+          specialty.toLowerCase().includes(lowerSearchTerm),
+        ) ||
+        advocate.yearsOfExperience
+          .toString()
+          .toLowerCase()
+          .includes(lowerSearchTerm)
       );
     });
 

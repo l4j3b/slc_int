@@ -35,7 +35,7 @@ const advocateColumns = [
     dataIndex: "specialties",
     render: (specialties: string[]) => {
       return (
-        <ul>
+        <ul className="list-disc list-inside">
           {specialties.map((specialty) => (
             <li key={specialty}>{specialty}</li>
           ))}

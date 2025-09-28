@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Advocate } from "@/types/advocates";
 import { Typography, Button } from "antd";
+import AppLayout from "@/components/app-layout";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -69,7 +70,7 @@ export default function Home() {
   };
 
   return (
-    <main style={{ margin: "24px" }}>
+    <AppLayout>
       <Typography.Title level={1}>Solace Advocates</Typography.Title>
       <br />
       <br />
@@ -127,6 +128,6 @@ export default function Home() {
           </tbody>
         </table>
       )}
-    </main>
+    </AppLayout>
   );
 }

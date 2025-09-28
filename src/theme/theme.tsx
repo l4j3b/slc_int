@@ -9,6 +9,13 @@ const theme: ThemeConfig = {
   token: {
     colorPrimary: colors.primary,
   },
+  components: {
+    Layout: {
+      headerBg: colors.secondary,
+      headerHeight: 64,
+      headerPadding: 18,
+    },
+  },
 };
 
 export default theme;

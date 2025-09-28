@@ -7,19 +7,38 @@ export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/advocates").then((response) => {
-      response.json().then((jsonResponse) => {
+    const fetchAdvocates = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await fetch("/api/advocates");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonResponse = await response.json();
+
         setAdvocates(jsonResponse.data);
         setFilteredAdvocates(jsonResponse.data);
-      });
-    });
+      } catch (error) {
+        // Error is recorded on the server side. We don't need to do more here for now.
+        setError("Failed to fetch advocates.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAdvocates();
   }, []);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value;
-
     setSearchTerm(searchTerm);
 
     const filteredAdvocates = advocates.filter((advocate) => {
@@ -67,38 +86,44 @@ export default function Home() {
       </div>
       <br />
       <br />
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((specialty) => (
-                    <div key={specialty}>{specialty}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && error && <p>{error}</p>}
+
+      {!isLoading && !error && (
+        <table>
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>City</th>
+              <th>Degree</th>
+              <th>Specialties</th>
+              <th>Years of Experience</th>
+              <th>Phone Number</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAdvocates.map((advocate) => {
+              return (
+                <tr key={advocate.id}>
+                  <td>{advocate.firstName}</td>
+                  <td>{advocate.lastName}</td>
+                  <td>{advocate.city}</td>
+                  <td>{advocate.degree}</td>
+                  <td>
+                    {advocate.specialties.map((specialty) => (
+                      <div key={specialty}>{specialty}</div>
+                    ))}
+                  </td>
+                  <td>{advocate.yearsOfExperience}</td>
+                  <td>{advocate.phoneNumber}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </main>
   );
 }

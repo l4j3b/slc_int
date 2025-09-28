@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Advocate } from "@/types/advocates";
+import { Typography, Button } from "antd";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
@@ -69,7 +70,7 @@ export default function Home() {
 
   return (
     <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
+      <Typography.Title level={1}>Solace Advocates</Typography.Title>
       <br />
       <br />
       <div>
@@ -82,7 +83,9 @@ export default function Home() {
           onChange={onChange}
           value={searchTerm}
         />
-        <button onClick={resetSearch}>Reset Search</button>
+        <Button onClick={resetSearch} variant="link" color="primary">
+          Reset Search
+        </Button>
       </div>
       <br />
       <br />
